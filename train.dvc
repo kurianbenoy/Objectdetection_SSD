@@ -1,8 +1,0 @@
-md5: b9bbd59b33071d81b1194e5dd62bf5fe
-wdir: .
-outs:
-- md5: 56b55ae8b8440b57f7c54ff679090a96.dir
-  path: train
-  cache: true
-  metric: false
-  persist: false
