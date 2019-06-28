@@ -17,15 +17,24 @@ if sys.version_info[0] == 2:
 else:
     import xml.etree.ElementTree as ET
 
-VOC_CLASSES = (  # always index 0
-    'aeroplane', 'bicycle', 'bird', 'boat',
-    'bottle', 'bus', 'car', 'cat', 'chair',
-    'cow', 'diningtable', 'dog', 'horse',
-    'motorbike', 'person', 'pottedplant',
-    'sheep', 'sofa', 'train', 'tvmonitor')
+# VOC_CLASSES = (  # always index 0
+#     'aeroplane', 'bicycle', 'bird', 'boat',
+#     'bottle', 'bus', 'car', 'cat', 'chair',
+#     'cow', 'diningtable', 'dog', 'horse',
+#     'motorbike', 'person', 'pottedplant',
+#     'sheep', 'sofa', 'train', 'tvmonitor')
+
+VOC_CLASSES = ('applauding', 'blowing_bubbles', 'brushing_teeth',
+ 'cleaning_the_floor', 'climbing', 'cooking', 'cutting_trees', 
+ 'cutting_vegetables', 'drinking', 'feeding_a_horse', 'fishing', 
+ 'fixing_a_bike', 'fixing_a_car', 'gardening', 'holding_an_umbrella',
+  'jumping', 'looking_through_a_microscope', 'looking_through_a_telescope',
+   'playing_guitar', 'playing_violin', 'pouring_liquid', 'pushing_a_cart', 
+'reading', 'phoning', 'riding_a_bike', 'riding_a_horse', 'rowing_a_boat', 
+'running', 'shooting_an_arrow', 'smoking', 'taking_photos', 'texting_message', 'throwing_frisby', 'using_a_computer', 'walking_the_dog', 'washing_dishes', 'watching_TV', 'waving_hands', 'writing_on_a_board', 'writing_on_a_book', )
 
 # note: if you used our download scripts, this should be right
-VOC_ROOT = osp.join(HOME, "/data/VOCdevkit/")
+VOC_ROOT = osp.join(HOME, "/home/kurian/Projects/Objectdetection_SSD/dataset/")
 
 
 class VOCAnnotationTransform(object):
@@ -56,9 +65,6 @@ class VOCAnnotationTransform(object):
         """
         res = []
         for obj in target.iter('object'):
-            difficult = int(obj.find('difficult').text) == 1
-            if not self.keep_difficult and difficult:
-                continue
             name = obj.find('action').text.lower().strip()
             bbox = obj.find('bndbox')
 
@@ -102,11 +108,13 @@ class VOCDetection(data.Dataset):
         self.target_transform = target_transform
         self.name = dataset_name
         self._annopath = osp.join('%s', 'XMLAnnotations', '%s.xml')
+        print(self._annopath)
+        print("annotations")
         self._imgpath = osp.join('%s', 'JPEGImages', '%s.jpg')
         self.ids = list()
-        rootpath = osp.join(self.root,'')
+        rootpath = osp.join(self.root)
         for line in open(osp.join(rootpath, 'ImageSplits', 'train.txt')):
-            self.ids.append((rootpath, line.strip()))
+            self.ids.append((rootpath, line.split('.')[0]))
 
     def __getitem__(self, index):
         im, gt, h, w = self.pull_item(index)
@@ -120,6 +128,7 @@ class VOCDetection(data.Dataset):
         img_id = self.ids[index]
 
         target = ET.parse(self._annopath % img_id).getroot()
+        print(target)
         img = cv2.imread(self._imgpath % img_id)
         height, width, channels = img.shape
 
