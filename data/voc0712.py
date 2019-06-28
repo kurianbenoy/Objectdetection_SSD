@@ -108,8 +108,8 @@ class VOCDetection(data.Dataset):
         self.target_transform = target_transform
         self.name = dataset_name
         self._annopath = osp.join('%s', 'XMLAnnotations', '%s.xml')
-        print(self._annopath)
-        print("annotations")
+        #print(self._annopath)
+        #print("annotations")
         self._imgpath = osp.join('%s', 'JPEGImages', '%s.jpg')
         self.ids = list()
         rootpath = osp.join(self.root)
@@ -128,7 +128,7 @@ class VOCDetection(data.Dataset):
         img_id = self.ids[index]
 
         target = ET.parse(self._annopath % img_id).getroot()
-        print(target)
+        #print(target)
         img = cv2.imread(self._imgpath % img_id)
         height, width, channels = img.shape
 
