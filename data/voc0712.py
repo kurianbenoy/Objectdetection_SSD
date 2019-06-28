@@ -59,7 +59,7 @@ class VOCAnnotationTransform(object):
             difficult = int(obj.find('difficult').text) == 1
             if not self.keep_difficult and difficult:
                 continue
-            name = obj.find('name').text.lower().strip()
+            name = obj.find('action').text.lower().strip()
             bbox = obj.find('bndbox')
 
             pts = ['xmin', 'ymin', 'xmax', 'ymax']
@@ -104,10 +104,9 @@ class VOCDetection(data.Dataset):
         self._annopath = osp.join('%s', 'XMLAnnotations', '%s.xml')
         self._imgpath = osp.join('%s', 'JPEGImages', '%s.jpg')
         self.ids = list()
-        # for (year, name) in image_sets:
-        #     rootpath = osp.join(self.root, 'VOC' + year)
-        #     for line in open(osp.join(rootpath, 'ImageSets', 'Main', name + '.txt')):
-        #         self.ids.append((rootpath, line.strip()))
+        rootpath = osp.join(self.root,'')
+        for line in open(osp.join(rootpath, 'ImageSplits', 'train.txt')):
+            self.ids.append((rootpath, line.strip()))
 
     def __getitem__(self, index):
         im, gt, h, w = self.pull_item(index)
