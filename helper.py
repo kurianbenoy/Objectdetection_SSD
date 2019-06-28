@@ -9,15 +9,7 @@ img = '/home/kurian/Projects/Objectdetection_SSD/data/JPEGImages/'
 img_split = '/home/kurian/Projects/Objectdetection_SSD/data/ImageSplits/'
 annRoot = '/home/kurian/Projects/Objectdetection_SSD/data/XMLAnnotations'
 test = []
-# for f_name in os.listdir(img_split):
-#     if f_name.endswith('_train.txt'):
-#         test.append(str(f_name))
-#     print(test)
-# train = '/home/kurian/Projects/Objectdetection_SSD/train'
-# for f in test:
-#     with open(img_split+f) as t:
-#         for line in t:
-#             shutil.copy2(str(img+line.rstrip()), train)
+
 
 def extract_annotations(image_id,annRoot):
     res=[]
@@ -29,24 +21,43 @@ def extract_annotations(image_id,annRoot):
     root=tree.getroot()
     return root
 
-def parse_voc_xml(self, node):
-        voc_dict = {}
-        children = list(node)
-        if children:
-            def_dic = collections.defaultdict(list)
-            for dc in map(self.parse_voc_xml, children):
-                for ind, v in dc.items():
-                    def_dic[ind].append(v)
-            voc_dict = {
-                node.tag:
-                    {ind: v[0] if len(v) == 1 else v
-                     for ind, v in def_dic.items()}
-            }
-        if node.text:
-            text = node.text.strip()
-            if not children:
-                voc_dict[node.tag] = text
-        return voc_dict
+# def parse_voc_xml(self, node):
+#         voc_dict = {}
+#         children = list(node)
+#         if children:
+#             def_dic = collections.defaultdict(list)
+#             for dc in map(self.parse_voc_xml, children):
+#                 for ind, v in dc.items():
+#                     def_dic[ind].append(v)
+#             voc_dict = {
+#                 node.tag:
+#                     {ind: v[0] if len(v) == 1 else v
+#                      for ind, v in def_dic.items()}
+#             }
+#         if node.text:
+#             text = node.text.strip()
+#             if not children:
+#                 voc_dict[node.tag] = text
+#         return voc_dict
+
+
+for obj in target.iter('object'):
+            name = obj.find('action').text.lower().strip()
+            bbox = obj.find('bndbox')
+
+            pts = ['xmin', 'ymin', 'xmax', 'ymax']
+            bndbox = []
+            for i, pt in enumerate(pts):
+                cur_pt = int(bbox.find(pt).text) - 1
+                # scale height or width
+                cur_pt = cur_pt / width if i % 2 == 0 else cur_pt / height
+                bndbox.append(cur_pt)
+            label_idx = self.class_to_ind[name]
+            bndbox.append(label_idx)
+            res += [bndbox]  # [xmin, ymin, xmax, ymax, label_ind]
+            # img_id = target.find('filename').text[:-4]
+
+        return res
 
 if __name__ == "__main__":
     node = extract_annotations('applauding_001.jpg', '/home/kurian/Projects/Objectdetection_SSD/data/XMLAnnotations/')

@@ -31,7 +31,7 @@ VOC_CLASSES = ('applauding', 'blowing_bubbles', 'brushing_teeth',
   'jumping', 'looking_through_a_microscope', 'looking_through_a_telescope',
    'playing_guitar', 'playing_violin', 'pouring_liquid', 'pushing_a_cart', 
 'reading', 'phoning', 'riding_a_bike', 'riding_a_horse', 'rowing_a_boat', 
-'running', 'shooting_an_arrow', 'smoking', 'taking_photos', 'texting_message', 'throwing_frisby', 'using_a_computer', 'walking_the_dog', 'washing_dishes', 'watching_TV', 'waving_hands', 'writing_on_a_board', 'writing_on_a_book', )
+'running', 'shooting_an_arrow', 'smoking', 'taking_photos', 'texting_message', 'throwing_frisby', 'using_a_computer', 'walking_the_dog', 'washing_dishes', 'watching_tv', 'waving_hands', 'writing_on_a_board', 'writing_on_a_book', )
 
 # note: if you used our download scripts, this should be right
 VOC_ROOT = osp.join(HOME, "/home/kurian/Projects/Objectdetection_SSD/dataset/")

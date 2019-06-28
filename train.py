@@ -84,8 +84,10 @@ def train():
         if args.dataset_root == COCO_ROOT:
             parser.error('Must specify dataset if specifying dataset_root')
         cfg = voc
-        dataset = VOCDetection1(root='/home/kurian/Projects/Objectdetection_SSD/data',
-                                )
+        dataset = VOCDetection(root=args.dataset_root,
+                               transform=SSDAugmentation(cfg['min_dim'],
+                                                         MEANS))
+
     if args.visdom:
         import visdom
         viz = visdom.Visdom()
@@ -128,17 +130,17 @@ def train():
     print('Loading the dataset...')
 
     epoch_size = len(dataset) // args.batch_size
-#    print('Training SSD on:', dataset.name)
+    print('Training SSD on:', dataset.name)
     print('Using the specified args:')
     print(args)
 
     step_index = 0
 
-    # if args.visdom:
-    #     vis_title = 'SSD.PyTorch on ' + dataset.name
-    #     vis_legend = ['Loc Loss', 'Conf Loss', 'Total Loss']
-    #     iter_plot = create_vis_plot('Iteration', 'Loss', vis_title, vis_legend)
-    #     epoch_plot = create_vis_plot('Epoch', 'Loss', vis_title, vis_legend)
+    if args.visdom:
+        vis_title = 'SSD.PyTorch on ' + dataset.name
+        vis_legend = ['Loc Loss', 'Conf Loss', 'Total Loss']
+        iter_plot = create_vis_plot('Iteration', 'Loss', vis_title, vis_legend)
+        epoch_plot = create_vis_plot('Epoch', 'Loss', vis_title, vis_legend)
 
     data_loader = data.DataLoader(dataset, args.batch_size,
                                   num_workers=args.num_workers,
@@ -186,7 +188,7 @@ def train():
             print('iter ' + repr(iteration) + ' || Loss: %.4f ||' % (loss.data), end=' ')
 
         if args.visdom:
-            update_vis_plot(iteration, loss_l.data, loss_c.data,
+            update_vis_plot(iteration, loss_l.data[0], loss_c.data[0],
                             iter_plot, epoch_plot, 'append')
 
         if iteration != 0 and iteration % 5000 == 0:
